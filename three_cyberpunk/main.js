@@ -21,3 +21,8 @@ controls.minAzimuthAngle = -Math.PI / 4;
 controls.maxAzimuthAngle = Math.PI / 4;
 controls.maxPolarAngle = Math.PI / 2; 
 controls.target.set(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
