@@ -13,3 +13,11 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 camera.position.z = 3;
+
+const controls = new OrbitControls(camera, canvas);
+controls.minDistance = 2;
+controls.maxDistance = 6;
+controls.minAzimuthAngle = -Math.PI / 4; 
+controls.maxAzimuthAngle = Math.PI / 4;
+controls.maxPolarAngle = Math.PI / 2; 
+controls.target.set(0, 0, 0);
