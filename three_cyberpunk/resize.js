@@ -1,5 +1,3 @@
-import { render } from "express/lib/response";
-
 export default function resize(canvas, camera, renderer) {
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -7,4 +5,4 @@ export default function resize(canvas, camera, renderer) {
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     });
-}   
+}

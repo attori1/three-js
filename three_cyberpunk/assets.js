@@ -3,7 +3,7 @@ export const sceneConfig = {
     models: [
         {
             name: 'decor',
-            path: 'images/decor.glb',
+            path: 'objets/decor.glb',
             pos: [0, -2, 5.2],
             scale: [2.3, 2, 2],
             rotY: 0,
@@ -12,7 +12,7 @@ export const sceneConfig = {
         },
         {
             name: 'arcade',
-            path: 'images/rusty_japanese_arcade.glb',
+            path: 'objets/rusty_japanese_arcade.glb',
             pos: [5.2, -2, 1.5],
             scale: [0.65, 0.7, 0.8],
             rotY: -0.9,
@@ -21,7 +21,7 @@ export const sceneConfig = {
         },
         {
             name: 'errata',
-            path: 'images/errata.glb',
+            path: 'objets/errata.glb',
             pos: [0, 0, 0],
             scale: [0.2, 0.2, 0.2],
             rotY: 0,
@@ -30,7 +30,7 @@ export const sceneConfig = {
         },
         {
             name: 'b12_robot',
-            path: 'images/b12_robot_from_stray.glb',
+            path: 'objets/b12_robot_from_stray.glb',
             pos: [1.5, 0.8, 0],
             scale: [0.3, 0.3, 0.3],
             rotY: -0.5,
@@ -38,7 +38,7 @@ export const sceneConfig = {
         },
         {
             name: 'deckard_gun',
-            path: 'images/deckards_sidearm_from_blade_runner.glb',
+            path: 'objets/deckards_sidearm_from_blade_runner.glb',
             pos: [-1.2, 0.9, 0.5],
             scale: [0.12, 0.12, 0.12],
             rotY: Math.PI / 4,
@@ -46,7 +46,7 @@ export const sceneConfig = {
         },
         {
             name: 'deus_ex',
-            path: 'images/deus_ex.glb',
+            path: 'objets/deus_ex.glb',
             pos: [2.5, 0, -1.5],
             scale: [0.2, 0.2, 0.2],
             rotY: 0,
@@ -54,7 +54,7 @@ export const sceneConfig = {
         },
         {
             name: 'spear_longinus',
-            path: 'images/evangelion_the_spear_of_longinus.glb',
+            path: 'objets/evangelion_the_spear_of_longinus.glb',
             pos: [0, 0, -4],
             scale: [0.04, 0.04, 0.04],
             rotY: 0.2,
@@ -62,7 +62,7 @@ export const sceneConfig = {
         },
         {
             name: 'buster_sword',
-            path: 'images/final_fantasy_7_remake_buster_sword.glb',
+            path: 'objets/final_fantasy_7_remake_buster_sword.glb',
             pos: [-2, 0.5, -2],
             scale: [0.1, 0.1, 0.1],
             rotY: -Math.PI / 3,
@@ -70,7 +70,7 @@ export const sceneConfig = {
         },
         {
             name: 'dominator',
-            path: 'images/low-poly_cerevo_dominator_paralyzer.glb',
+            path: 'objets/low-poly_cerevo_dominator_paralyzer.glb',
             pos: [0, 1, 0],
             scale: [0.25, 0.25, 0.25],
             rotY: 0.1,
@@ -80,7 +80,7 @@ export const sceneConfig = {
         },
         {
             name: 'nier_robot',
-            path: 'images/nier_automata__small_robot.glb',
+            path: 'objets/nier_automata__small_robot.glb',
             pos: [-2.5, 0, 1.5],
             scale: [0.2, 0.2, 0.2],
             rotY: 0.5,
@@ -88,7 +88,7 @@ export const sceneConfig = {
         },
         {
             name: 'robocop',
-            path: 'images/robocop.glb',
+            path: 'objets/robocop.glb',
             pos: [-4, 0, -1],
             scale: [0.18, 0.18, 0.18],
             rotY: Math.PI / 6,
@@ -98,7 +98,7 @@ export const sceneConfig = {
         },
         {
             name: 'sentinel_matrix',
-            path: 'images/sentinelle_-_matrix.glb',
+            path: 'objets/sentinelle_-_matrix.glb',
             pos: [3, 2, -5],
             scale: [0.015, 0.015, 0.015],
             rotY: 0,
@@ -106,7 +106,7 @@ export const sceneConfig = {
         },
         {
             name: 'tron_disk',
-            path: 'images/tron_disk.glb',
+            path: 'objets/tron_disk.glb',
             pos: [0.8, 1.2, 1.2],
             scale: [0.003, 0.003, 0.003],
             rotY: 0,
@@ -116,7 +116,7 @@ export const sceneConfig = {
         },
         {
             name: 'zerocasco',
-            path: 'images/zerocasco_code_geass.glb',
+            path: 'objets/zerocasco_code_geass.glb',
             pos: [1.8, 1, -0.8],
             scale: [0.15, 0.15, 0.15],
             rotY: -0.2,
@@ -125,7 +125,7 @@ export const sceneConfig = {
         },
         {
             name: 'generic_obj',
-            path: 'images/obj.glb', 
+            path: 'objets/obj.glb', 
             pos: [0, -1, 5],
             scale: [1, 1, 1],
             rotY: 0,
