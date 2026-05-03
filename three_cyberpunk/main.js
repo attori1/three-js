@@ -2,13 +2,11 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
 import { sceneConfig } from './assets.js';
 import { setupLumieres, setupLumieresArcade } from './lumiere.js';
+import { setupMurs } from './mur.js'; 
+import { setupMarche } from './marche.js';
 
-// ─── BASE SETUP ────────────────────────────────────────────────────────────────
-
-// FIX: était '.webgl' mais le canvas a id="canvas"
 const canvas = document.querySelector('#canvas');
 
 const scene = new THREE.Scene();
@@ -24,27 +22,19 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 3;
 
-// FIX: controls.enabled était false → scène figée, non interactive
 const controls = new OrbitControls(camera, canvas);
-controls.enabled = true;
 controls.enableDamping = true;
 controls.minDistance = 2;
 controls.maxDistance = 6;
-controls.minAzimuthAngle = -Math.PI / 4;
-controls.maxAzimuthAngle = Math.PI / 4;
 controls.maxPolarAngle = Math.PI / 2;
 controls.target.set(0, 0, 0);
 
-// ─── LUMIÈRES ──────────────────────────────────────────────────────────────────
+const murs = setupMurs({ xMin: -14, xMax: 6, zMin: -2, zMax: 7 });
+const marche = setupMarche(camera, { vitesse: 0.1, hauteur: 1.3, sensibilite: 0.002 });
 
-// FIX: setupLumieresArcade était appelé dans le forEach pour chaque modèle
-//      hasSpecialLight → lumières dupliquées x15. Appelées une seule fois ici.
 setupLumieres(scene);
 setupLumieresArcade(scene);
 
-// ─── LOADERS ───────────────────────────────────────────────────────────────────
-
-// FIX: LoadingManager connecté à l'UI (barre restait bloquée à 0%)
 const manager = new THREE.LoadingManager(
     () => {
         const loaderScreen = document.getElementById('loader-screen');
@@ -65,11 +55,8 @@ const manager = new THREE.LoadingManager(
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
 
-// FIX: chemins d'import → three/addons/ au lieu de three/examples/jsm/
 const gltfLoader = new GLTFLoader(manager);
 gltfLoader.setDRACOLoader(dracoLoader);
-
-// ─── CHARGEMENT DES MODÈLES ────────────────────────────────────────────────────
 
 sceneConfig.models.forEach(item => {
     gltfLoader.load(
@@ -101,15 +88,10 @@ sceneConfig.models.forEach(item => {
             scene.add(model);
         },
         undefined,
-        // FIX: callback d'erreur pour voir les 404 en console
         (err) => console.error(`Erreur modèle "${item.name}" :`, err)
     );
 });
 
-// ─── RESIZE ────────────────────────────────────────────────────────────────────
-
-// FIX: resize.js importait depuis 'express/lib/response' → crash Vite immédiat.
-//      Le resize est géré directement ici.
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -117,11 +99,10 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-// ─── BOUCLE D'ANIMATION ────────────────────────────────────────────────────────
-
 const animate = () => {
     requestAnimationFrame(animate);
-    controls.update();
+    marche.update();
+    murs.checkCollision(camera);
     renderer.render(scene, camera);
 };
 

@@ -75,7 +75,7 @@ export const sceneConfig = {
             scale: [0.25, 0.25, 0.25],
             rotY: 0.1,
             interact: true,
-            intensity: 0.5, 
+            intensity: 0.6, 
             ignoreEmbeddedLights: true 
         },
         {
@@ -121,7 +121,6 @@ export const sceneConfig = {
             scale: [0.15, 0.15, 0.15],
             rotY: -0.2,
             interact: true,
-            useGui: true
         },
         {
             name: 'generic_obj',
