@@ -1,0 +1,545 @@
+/* ─── landingPage.css — Émission TV cyberpunk ───────────────────────────────
+   Ambiance : diffusion en direct d'une chaîne fictive "CYBER_TV"
+   Structure :
+     - Barre de diffusion haute  (chaîne, EN DIRECT, horloge)
+     - Zone principale CRT       (titre + boutons)
+     - Lower third               (nom de l'émission + épisode)
+     - Ticker d'actualités       (scrolling)
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── Conteneur extérieur ──────────────────────────────────────────────────── */
+#tv-outer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050508;
+  z-index: 2000;
+  perspective: 900px;
+}
+
+#tv-bezel {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #0a0a0f;
+  border-radius: 0;
+  box-shadow: none;
+  transition:
+    width 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.55s ease,
+    box-shadow 0.55s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Animation de sortie ──────────────────────────────────────────────────── */
+#tv-outer.exiting #tv-bezel {
+  width: 76vw;
+  height: 58vh;
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 10px #111,
+    0 0 0 18px #0a0a0a,
+    0 0 60px rgba(0, 255, 255, 0.12),
+    inset 0 0 40px rgba(0, 0, 0, 0.9);
+}
+
+#tv-outer.shrinking {
+  animation: tv-shrink-out 0.9s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes tv-shrink-out {
+  0%   { transform: scale(1);    opacity: 1; }
+  60%  { transform: translateZ(-200px) scale(0.55); opacity: 1; }
+  100% { transform: translateZ(-600px) scale(0.1);  opacity: 0; }
+}
+
+/* ── Écran CRT (fond + scanlines + vignette) ─────────────────────────────── */
+#tv-screen {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center,
+    #04060f 0%, #020409 60%, #000204 100%
+  );
+  transition: inset 0.55s ease, border-radius 0.55s ease;
+}
+
+#tv-outer.exiting #tv-screen {
+  margin: 10px;
+  border-radius: 8px;
+}
+
+/* Vignette CRT */
+#tv-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    transparent 50%, rgba(0,0,0,0.65) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Scanlines */
+#tv-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.2) 2px,
+    rgba(0,0,0,0.2) 4px
+  );
+  pointer-events: none;
+  z-index: 3;
+  animation: scanlines-drift 10s linear infinite;
+}
+
+@keyframes scanlines-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 80px; }
+}
+
+/* Balayage lumineux */
+#tv-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    transparent 0%, rgba(0,200,255,0.018) 50%, transparent 100%
+  );
+  animation: sweep 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+@keyframes sweep {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* ── BARRE DE DIFFUSION HAUTE ─────────────────────────────────────────────── */
+#tv-broadcast-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.75);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.12);
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+}
+
+/* Logo chaîne */
+#tv-channel-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#tv-channel-name {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(11px, 1.4vw, 14px);
+  font-weight: bold;
+  color: #00ffff;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+#tv-channel-num {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(9px, 1vw, 11px);
+  color: rgba(0, 255, 255, 0.45);
+  letter-spacing: 0.15em;
+  border-left: 1px solid rgba(0,255,255,0.2);
+  padding-left: 10px;
+}
+
+/* Badge EN DIRECT */
+#tv-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: #cc0000;
+  border-radius: 2px;
+}
+
+#tv-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  animation: live-blink 1s ease-in-out infinite;
+}
+
+@keyframes live-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+#tv-live-text {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(9px, 1vw, 11px);
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.2em;
+}
+
+/* Horloge + signal */
+#tv-broadcast-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+#tv-clock {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(11px, 1.3vw, 14px);
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.1em;
+  min-width: 70px;
+  text-align: right;
+}
+
+/* Barres de signal */
+#tv-signal-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+
+.signal-bar {
+  width: 4px;
+  background: #00ffff;
+  border-radius: 1px;
+  opacity: 0.7;
+}
+.signal-bar:nth-child(1) { height: 4px; }
+.signal-bar:nth-child(2) { height: 7px; }
+.signal-bar:nth-child(3) { height: 10px; }
+.signal-bar:nth-child(4) { height: 13px; }
+
+/* ── ZONE CENTRALE (titre + boutons) ─────────────────────────────────────── */
+#tv-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+  position: relative;
+  z-index: 10;
+  padding: 20px 24px;
+}
+
+/* Bloc titre */
+#tv-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: tv-fadein 0.8s 0.3s ease both;
+}
+
+#tv-main-title {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(32px, 6vw, 76px);
+  font-weight: bold;
+  color: #00ffff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  line-height: 1.1;
+  text-shadow:
+    0 0 20px rgba(0, 255, 255, 0.8),
+    0 0 60px rgba(0, 255, 255, 0.35);
+  animation: title-flicker 8s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes title-flicker {
+  0%, 97%, 100% { opacity: 1; }
+  98%            { opacity: 0.85; }
+  99%            { opacity: 1; }
+}
+
+#tv-main-title.glitch {
+  animation: title-glitch 0.18s steps(1) both;
+}
+
+@keyframes title-glitch {
+  0%   { text-shadow: 4px 0 #ff0077, -4px 0 #00ffff; clip-path: inset(20% 0 70% 0); }
+  25%  { text-shadow: -4px 0 #ff0077,  4px 0 #00ffff; clip-path: inset(50% 0 40% 0); }
+  50%  { text-shadow: 2px 0 #ff0077, -2px 0 #00ffff; clip-path: inset(70% 0 20% 0); }
+  100% { text-shadow: 0 0 20px rgba(0,255,255,0.8), 0 0 60px rgba(0,255,255,0.35); clip-path: none; }
+}
+
+#tv-tagline {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(8px, 1.1vw, 12px);
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* ── Boutons ──────────────────────────────────────────────────────────────── */
+#tv-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: tv-fadein 0.8s 0.55s ease both;
+}
+
+@keyframes tv-fadein {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+#btn-play {
+  position: relative;
+  padding: 16px 60px;
+  background: transparent;
+  border: 1px solid #00ffff;
+  color: #00ffff;
+  font-family: 'Courier New', monospace;
+  font-size: clamp(13px, 1.8vw, 17px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  transition: color 0.2s;
+  animation: btn-pulse 2.5s ease-in-out infinite;
+}
+
+#btn-play::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #00ffff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  z-index: -1;
+}
+
+#btn-play:hover::before { transform: scaleX(1); }
+#btn-play:hover { color: #000; animation: none; }
+
+@keyframes btn-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+  50%       { box-shadow: 0 0 22px rgba(0,255,255,0.7), 0 0 40px rgba(0,255,255,0.2); }
+}
+
+#btn-play.loading {
+  animation: none; opacity: 0.65; pointer-events: none;
+}
+
+.btn-secondary {
+  padding: 9px 28px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.45);
+  font-family: 'Courier New', monospace;
+  font-size: clamp(9px, 1.1vw, 12px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(255,0,119,0.5);
+  color: #ff6aad;
+}
+
+/* ── LOWER THIRD (bandeau inférieur de nom d'émission) ───────────────────── */
+#tv-lower-third {
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid rgba(0, 255, 255, 0.15);
+}
+
+#tv-lower-accent {
+  width: 4px;
+  background: #00ffff;
+  flex-shrink: 0;
+}
+
+#tv-lower-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  gap: 16px;
+}
+
+#tv-show-name {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(10px, 1.3vw, 14px);
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+#tv-show-meta {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(8px, 1vw, 11px);
+  color: rgba(0, 255, 255, 0.55);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+/* ── TICKER D'ACTUALITÉS ──────────────────────────────────────────────────── */
+#tv-ticker-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.85);
+  border-top: 1px solid rgba(255, 0, 119, 0.25);
+  flex-shrink: 0;
+  overflow: hidden;
+  z-index: 10;
+  height: 32px;
+}
+
+#tv-ticker-label {
+  flex-shrink: 0;
+  padding: 0 14px;
+  background: #ff0077;
+  font-family: 'Courier New', monospace;
+  font-size: clamp(8px, 1vw, 10px);
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+#tv-ticker-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+#tv-ticker-content {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: 'Courier New', monospace;
+  font-size: clamp(9px, 1.1vw, 11px);
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.08em;
+  animation: ticker-scroll 40s linear infinite;
+  padding-left: 100%;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+/* ── MODALE ───────────────────────────────────────────────────────────────── */
+#tv-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+#tv-modal-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#tv-modal-box {
+  width: min(520px, 88%);
+  max-height: 72%;
+  overflow-y: auto;
+  background: rgba(2, 10, 18, 0.97);
+  border: 1px solid rgba(0,255,255,0.3);
+  box-shadow: 0 0 40px rgba(0,255,255,0.1);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transform: translateY(10px);
+  transition: transform 0.25s;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,255,255,0.2) transparent;
+}
+
+#tv-modal-overlay.visible #tv-modal-box { transform: translateY(0); }
+#tv-modal-box::-webkit-scrollbar       { width: 3px; }
+#tv-modal-box::-webkit-scrollbar-thumb { background: rgba(0,255,255,0.2); }
+
+#modal-title {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: bold;
+  color: #00ffff;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  border-bottom: 1px solid rgba(0,255,255,0.15);
+  padding-bottom: 12px;
+}
+
+#modal-body {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  line-height: 2;
+  letter-spacing: 0.04em;
+}
+
+#modal-body strong {
+  color: #ff0077;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+#modal-close {
+  align-self: flex-end;
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid rgba(255,0,119,0.4);
+  color: rgba(255,0,119,0.7);
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+#modal-close:hover { background: #ff0077; color: #000; }

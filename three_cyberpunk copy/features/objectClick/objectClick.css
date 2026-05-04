@@ -1,0 +1,81 @@
+/* ─── objectClick.css ─────────────────────────────────────────────────────── */
+
+#canvas { cursor: crosshair; }
+#canvas.hovering-object { cursor: pointer; }
+#canvas.zooming { cursor: wait; pointer-events: none; }
+
+/* Ripple au clic */
+.click-ripple {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-expand 0.4s ease-out forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+@keyframes ripple-expand {
+  to { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+/* Badge de survol */
+#interaction-badge {
+  position: fixed;
+  padding: 5px 14px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid #00ffff;
+  color: #00ffff;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 200;
+  white-space: nowrap;
+}
+#interaction-badge.visible { opacity: 1; }
+
+/* ── Bouton FERMER ✕ ─────────────────────────────────────────────────────── */
+#close-focus-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: #ff0077;
+  border: none;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 600;
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 3px rgba(255, 0, 119, 0.3),
+    0 0 20px rgba(255, 0, 119, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: btn-pulse-red 2s ease-in-out infinite;
+}
+#close-focus-btn:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 4px rgba(255, 0, 119, 0.5),
+    0 0 30px rgba(255, 0, 119, 0.9),
+    0 4px 16px rgba(0, 0, 0, 0.6);
+  animation: none;
+}
+#close-focus-btn.visible { display: flex; }
+
+@keyframes btn-pulse-red {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255,0,119,0.3), 0 0 20px rgba(255,0,119,0.6); }
+  50%       { box-shadow: 0 0 0 6px rgba(255,0,119,0.15), 0 0 35px rgba(255,0,119,0.9); }
+}
